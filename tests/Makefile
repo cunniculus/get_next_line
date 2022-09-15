@@ -14,7 +14,7 @@ SRC = get_next_line.c
 
 SRCS = $(addprefix $(SRCDIR)/, $(SRC))
 
-BUFFER_SIZE = BUFFER_SIZE=42
+BUFFER_SIZE = BUFFER_SIZE=21
 
 TEST_FILES_DIR = test_files
 TEST_FILES = $(addprefix $(TEST_FILES_DIR)/, \
@@ -28,3 +28,5 @@ $(NAME): $(SRCS) $(SRC_TEST) $(TEST_FILES)
 	
 fclean:
 	rm -f $(NAME)
+
+re: fclean all
