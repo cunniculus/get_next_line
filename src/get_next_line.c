@@ -1,55 +1,95 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <bsd/string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/15 15:02:25 by guolivei          #+#    #+#             */
+/*   Updated: 2022/09/15 19:55:33 by guolivei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int line_feed(char *buff, int len);
+#include "get_next_line.h"
+#include <stdio.h> // REMOVER
 
-char    *get_next_line(int fd)
+static t_fddict	*ft_lstnew(int	fd);
+static void	ft_lstadd_back(t_fddict **lst, t_fddict *new);
+static int	is_new_fd(const t_fddict *lst, int fd);
+static int	set_buffer(char **buffer, int fd);
+
+char *get_next_line(int fd)
 {
-    int     r;
-    int     total;
-    char    buff[BUFFER_SIZE];
-    char    *line;
-    int     found_line_feed;
-    char    *tmp;
+	static t_fddict	*fd_lst;
+	char *buffer;
+	int	read;
 
-    found_line_feed = 0;
+	buffer = 0;
+	if (!fd_lst || is_new_fd(fd_lst, fd))
+	{
+		printf("new node created with fd %d\n", fd);
+		ft_lstadd_back(&fd_lst, ft_lstnew(fd));
+		if (!fd_lst)
+			return (NULL);
+	}
+	read = set_buffer(&buffer, fd);
+	printf("buffer: %s\n", buffer);
 
-    total = 0;
-    line = NULL;
-    while ((r = read(fd, buff, BUFFER_SIZE)) && !found_line_feed)
-    {
-        if (line_feed(buff, r) >= 0)
-        {
-            r = line_feed(buff, r) + 1; 
-            found_line_feed = 1;
-        }
-        if (total > 0)
-        {
-            tmp = strdup(line);
-            free(line);
-            line = calloc (1, total + r + 1);
-            memmove(line, tmp, strlen(tmp));
-            free(tmp);
-        }
-        else
-            line = calloc (1, r + 1);
-        memmove(&line[total], buff, r);
-        total += r;
-    }
-    return (line);
+	return (buffer);
 }
 
-int line_feed(char *buff, int len)
+static t_fddict	*ft_lstnew(int	fd)
 {
-    int i;
-    i = 0;
-    while (i < len)
-    {
-        if (buff[i] == '\n')
-            return (i);
-        i++;
-    }
-    return (-1);
+	t_fddict *node;
+
+	node = NULL;
+	node = (t_fddict *) malloc(sizeof (t_fddict));
+	if (node == NULL)
+		return (NULL);
+	node->fd = fd;
+	node->next = NULL;
+	return (node);
+}
+
+static void	ft_lstadd_back(t_fddict **lst, t_fddict *new)
+{
+	t_fddict	*tmp;
+
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	tmp = *lst;
+	while (tmp)
+	{
+		if (tmp->next == NULL)
+		{
+			tmp->next = new;
+			return ;
+		}
+		tmp = tmp->next;
+	}
+}
+
+static int	is_new_fd(const t_fddict *lst, int fd)
+{
+	while (lst)
+	{
+		if (lst->fd == fd)
+			return (FALSE);
+		lst = lst->next;
+	}
+	return (TRUE); 
+}
+
+static int	set_buffer(char **buffer, int fd)
+{
+	int	r;
+
+	*buffer = malloc (BUFFER_SIZE + 1);
+	r = read(fd, *buffer, BUFFER_SIZE);
+	*buffer[r] = '\0';
+	return (r);
+
 }

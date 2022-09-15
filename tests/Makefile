@@ -8,11 +8,23 @@ INCLUDES = ../src
 
 CC = gcc
 
+SRCDIR = ../src
+
+SRC = get_next_line.c
+
+SRCS = $(addprefix $(SRCDIR)/, $(SRC))
+
 BUFFER_SIZE = BUFFER_SIZE=42
+
+TEST_FILES_DIR = test_files
+TEST_FILES = $(addprefix $(TEST_FILES_DIR)/, \
+		a_nl.txt)
 
 all: $(NAME)
 
-$(NAME): $(SRC_TEST)
-	$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) $(SRC_TEST) -o $(NAME) ../src/get_next_line.c
-
+$(NAME): $(SRCS) $(SRC_TEST) $(TEST_FILES)
+	@$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) $(SRC_TEST) -o $(NAME) $(SRCS)
+	@./$(NAME)
 	
+fclean:
+	rm -f $(NAME)
