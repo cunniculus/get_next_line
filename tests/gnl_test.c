@@ -18,9 +18,8 @@ int main()
         printf("Fail to open()\n");
         return (1);
     }
-
-    while (line = get_next_line(fd))
-        printf("%s", line);
+	line = get_next_line(fd);
+    printf("%s", line);
     if (close(fd) == -1)
     {
         printf("Fail to close()\n");
@@ -28,6 +27,4 @@ int main()
     }
     free(line);
     return (0);
-
-
 }
