@@ -70,25 +70,6 @@ MU_TEST(test_emptyfile)
     	free(actual_return);
 }
 
-MU_TEST(test_just_nl_char)
-{
-	// ARRANGE
-    char    *expected_return = "\n";
-	char	*actual_return;
-
-    fd = open("test_files/just_nl_char.txt", O_RDONLY);
-	test_open();
-
-	// ACT
-	actual_return = get_next_line(fd);
-
-	// ASSERT
-	mu_assert_string_eq(actual_return, expected_return);
-	fd = close(fd);
-	test_close();
-	if (actual_return)
-    	free(actual_return);
-}
 
 MU_TEST(test_ad)
 {
@@ -169,7 +150,6 @@ MU_TEST_SUITE(test_suite) {
 	MU_RUN_TEST(test_emptyfile);
 	MU_RUN_TEST(test_ad);
 	MU_RUN_TEST(test_nomes);
-	MU_RUN_TEST(test_just_nl_char);
 }
 
 int main(void) 

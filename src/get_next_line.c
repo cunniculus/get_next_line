@@ -6,7 +6,7 @@
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/21 23:47:10 by guolivei         ###   ########.fr       */
+/*   Updated: 2022/09/22 00:06:10 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_next_line(int fd)
 		temp = ft_strjoin(&temp, buffer);	
 		printf("temp = %s\n", temp);
 	}
-	line = get_line(temp, current_read);
+	line = get_line(temp);
 	temp = update_temp(&temp, line);
 	return (line);
 }
