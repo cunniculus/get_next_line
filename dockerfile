@@ -9,7 +9,8 @@ RUN apt-get install valgrind -y
 RUN apt-get install python3 -y
 RUN apt-get install python3-venv python3-pip -y
 RUN python3 -m pip install --upgrade pip setuptools
-RUN python3 -m pip install norminette  
+RUN python3 -m pip install norminette
+RUN B=42 && export B
 
 WORKDIR /product
 
