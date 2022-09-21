@@ -38,7 +38,7 @@ vgnl: $(NAME) exp
 	valgrind ./$(NAME)
 
 vm: mtest exp
-	valgrind ./mtest
+	valgrind --error-exitcode=42 --leak-check=full ./mtest
 	
 exp:
 	@export B
