@@ -6,7 +6,7 @@
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/21 22:57:27 by guolivei         ###   ########.fr       */
+/*   Updated: 2022/09/21 23:47:10 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int		nl_in_temp(char *temp);
 char	*ft_strjoin(char **s1, char *s2);
 int		ft_strlen(char *str);
 char	*update_temp(char **temp, char *line);
-char	*get_line(char *str, int current_read);
+char	*get_line(char *str);
 
 char	*get_next_line(int fd)
 {
@@ -98,13 +98,11 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*get_line(char *str, int current_read)
+char	*get_line(char *str)
 {
 	int		len;
 	int		i;
 	char	*line;
-
-	current_read = 0;
 
 	if (!str)
 		return (0);
