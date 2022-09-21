@@ -5,199 +5,145 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/15 15:02:25 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/16 00:10:17 by guolivei         ###   ########.fr       */
+/*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
+/*   Updated: 2022/09/21 21:50:31 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h> // REMOVER
+#include <stdio.h>
 
-static			t_fddict	*ft_lstnew(int	fd);
-static void		ft_lstadd_back(t_fddict **lst, t_fddict *new);
-static int		is_new_fd(const t_fddict *lst, int fd);
-static int		set_buffer(char **buffer, int fd);
-//static void		ft_lstdelone(t_fddict *lst, void (*del)(void*));
-//static void		ft_lstclear(t_fddict **lst, void (*del)(void *));
-static size_t	count_nl(char *s);
-static int		split(t_fddict **lst, char *buffer);
+int		nl_in_temp(char *temp);
+char	*ft_strjoin(char **s1, char *s2);
+int		ft_strlen(char *str);
+char	*update_temp(char **temp);
+char	*get_line(char *str);
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static t_fddict	*fd_lst;
-	t_fddict *tmp;
-	char *buffer;
-	int	read;
+	char		buffer[BUFFER_SIZE + 1]; // buffer to read into
+	static char *temp; // var to store chars read in between calls
+	char		*line;
+	int			current_read; // number of chars read from read() function
 
-	// checks if fd is beeing read for the first time
-	// if so, node is created for this fd
-	if (is_new_fd(fd_lst, fd))
+	// while temp has no '\n' char
+		// read BUFFER_SIZE bytes
+		// append it to temp
+	while (!nl_in_temp(temp))
 	{
-		printf("fd is %d\n", fd);
-		ft_lstadd_back(&fd_lst, ft_lstnew(fd));
-		printf("new node created with fd %d\n", fd);
-		if (!fd_lst)
-			return (NULL);
+		current_read = read(fd, buffer, BUFFER_SIZE);
+		if (!current_read)
+			break ;
+		buffer[current_read] = '\0';
+		printf("Current_read: %d\n", current_read);
+		printf("buffer = %s\n", buffer);
+		temp = ft_strjoin(&temp, buffer);	
+		printf("temp = %s\n", temp);
 	}
-	tmp = fd_lst;
-	while(tmp->fd != fd)
-		tmp = tmp->next;
-	printf("tmp\n");
-	// if no line was read this fd before
-	// read as much as BUFFER_SIZE bytes
-	read = -1;
-	if (fd_lst->lines_stored == 0)
-	{
-		printf("no lines_stored\n");
-		read = set_buffer(&buffer, fd);
-		while (read && split(&tmp, buffer))
-			;
-		printf("saiu do while\n");
-
-	}
-	if (!read)
-		return (NULL);
-	printf("buffer: %s\n", buffer);
-	return (buffer);
+	line = get_line(temp);
+	temp = update_temp(&temp);
+	return (line);
 }
 
-static t_fddict	*ft_lstnew(int	fd)
+int	nl_in_temp(char *temp)
 {
-	t_fddict *node;
-	printf("inside lstnew\n");
-	node = NULL;
-	node = (t_fddict *) malloc(sizeof (t_fddict));
-	if (!node)
-		return (NULL);
-	node->fd = fd;
-	node->next = NULL;
-	return (node);
-}
-
-static void	ft_lstadd_back(t_fddict **lst, t_fddict *new)
-{
-	t_fddict	*tmp;
-
-	printf("inside lstadd_back\n");
-	if (!*lst)
+	// in case temp is NULL
+	if (!temp)
+		return (FALSE);
+	while (*temp)
 	{
-		*lst = new;
-		return ;
+		if ('\n' == *temp)
+			return (TRUE);
+		temp++;
 	}
-	tmp = *lst;
-	while (tmp)
-	{
-		if (tmp->next == NULL)
-		{
-			tmp->next = new;
-			return ;
-		}
-		tmp = tmp->next;
-	}
+	return (FALSE);
 }
 
-static int	is_new_fd(const t_fddict *lst, int fd)
+char	*ft_strjoin(char **s1, char *s2)
 {
-	while (lst)
-	{
-		if (lst->fd == fd)
-			return (FALSE);
-		lst = lst->next;
-	}
-	return (TRUE); 
-}
+	char	*str;
+	int		len;
+	int		i;
+	int		j;
 
-static int	set_buffer(char **buffer, int fd)
-{
-	int	r;
-
-	printf("inside set_buffer\n");
-	*buffer = malloc (BUFFER_SIZE + 1);
-	r = read(fd, *buffer, BUFFER_SIZE);
-	if (!r)
-		return (0);
-	(*buffer)[r] = '\0';
-	printf("end of set_buffer\n");
-	return (r);
-
-}
-/*
-static void	ft_lstclear(t_fddict **lst, void (*del)(void *))
-{
-	t_fddict	*tmp;
-	int			i;
-
+	len = ft_strlen(*s1) + ft_strlen(s2);;
+	str = malloc(sizeof(char) * (len + 1));
 	i = 0;
-	while (*lst)
+	while (*s1 && (*s1)[i])
 	{
-		tmp = (*lst)->next;
-		while (((*lst)->lines)[i])
-		{
-			del(((*lst)->lines)[i]);
-			i++;
-		}
-		del((*lst)->lines);
-		free(*lst);
-		*lst = tmp;
+		str[i] = (*s1)[i];
+		i++;
 	}
+	j = 0;
+	while (s2 && s2[j])
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[len] = '\0';
+	if (*s1)
+		free(*s1);
+	return (str);
 }
-*/
-/*
-static void	ft_lstdelone(t_fddict *lst, void (*del)(void*))
+
+int	ft_strlen(char *str)
 {
 	int	i;
 
 	i = 0;
-	while ((lst->lines)[i])
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
+}
+
+char	*get_line(char *str)
+{
+	int		len;
+	int		i;
+	char	*line;
+
+	if (!str)
+		return (0);
+	len = 0;
+	while (str[len] != '\n')
+		len++;
+	line = malloc(sizeof(char) * (len + 2));
+	i = 0;
+	while (str[i] != '\n')
 	{
-		del((lst->lines)[i]);
+		line[i] = str[i];
 		i++;
 	}
-	del(lst->lines);
-	free(lst);
-}
-*/
-
-static size_t	count_nl(char *s)
-{
-	size_t	nl;
-
-	nl = 0;
-	while (*s)
-	{
-		if (*s == '\n')
-			nl++;
-		s++;
-	}
-	return (nl);
+	line[len] = '\n';
+	line[len + i] = '\0';
+	return (line);
 }
 
-// splits buffer into stirngs separated by '\n'
-// return 0 if no '\n' was found in buffer, number > 0 otherwise
-static int split(t_fddict **lst, char *buffer)
+char	*update_temp(char **temp)
 {
-	int lines;
-	int	s_index;
-	int	c_index;
+	int	len;
+	int cut;
+	int i;
+	char *new_temp;
 
-	(*lst)->lines_stored = count_nl(buffer) + 1;
-	(*lst)->lines = malloc (sizeof (char *) * ((*lst)->lines_stored + 1));
-	s_index = 0;
-	lines = 0;
-	while (lines < (*lst)->lines_stored)
+	if (!(*temp))
+		return (0);
+	len = ft_strlen(*temp);
+	cut = 0;
+	while ((*temp)[cut] != '\n')
+		cut++;
+	cut++;
+	new_temp = malloc(sizeof(char) * (len + 1 - cut));
+	i = 0;
+	while ((*temp)[cut])
 	{
-		((*lst)->lines)[s_index] = malloc (BUFFER_SIZE + 1);
-		c_index = 0;
-		while (*buffer && *buffer != '\n')
-		{
-			((*lst)->lines)[s_index][c_index] = *buffer;
-			buffer++;
-			c_index++;
-		}
-		((*lst)->lines)[s_index][c_index] = '\0';
-		s_index++;
-		lines++;
+		new_temp[i] = (*temp)[cut];
+		cut++;
+		i++;
 	}
-	((*lst)->lines)[s_index] = NULL;
-	return ((*lst)->lines_stored == 1);
+	new_temp[i] = '\0';
+	free (*temp);
+	return (new_temp);
 }

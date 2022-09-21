@@ -1,0 +1,9 @@
+get_next_line
+
+	error handling
+		valid fd?
+		file still open?
+
+	temp content
+
+	read

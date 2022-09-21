@@ -23,12 +23,9 @@ int main()
     printf("%s", line);
     free(line);
 
-	line = get_next_line(fd[0]);
-    printf("%s", line);
-    free(line);
-
-// a_nl10x.txt
-    fd[1] = open("test_files/a_nl10x.txt", O_RDONLY);
+// a-k.txt
+	/*
+    fd[1] = open("test_files/a-k.txt", O_RDONLY);
     if (fd[1] == -1)
     {
         printf("Fail to open()\n");
@@ -49,4 +46,5 @@ int main()
         return (1);
     }
     return (0);
+	*/
 }
