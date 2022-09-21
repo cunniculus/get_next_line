@@ -6,7 +6,7 @@
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/21 21:50:31 by guolivei         ###   ########.fr       */
+/*   Updated: 2022/09/21 22:57:27 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 int		nl_in_temp(char *temp);
 char	*ft_strjoin(char **s1, char *s2);
 int		ft_strlen(char *str);
-char	*update_temp(char **temp);
-char	*get_line(char *str);
+char	*update_temp(char **temp, char *line);
+char	*get_line(char *str, int current_read);
 
 char	*get_next_line(int fd)
 {
@@ -40,8 +40,8 @@ char	*get_next_line(int fd)
 		temp = ft_strjoin(&temp, buffer);	
 		printf("temp = %s\n", temp);
 	}
-	line = get_line(temp);
-	temp = update_temp(&temp);
+	line = get_line(temp, current_read);
+	temp = update_temp(&temp, line);
 	return (line);
 }
 
@@ -98,30 +98,33 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*get_line(char *str)
+char	*get_line(char *str, int current_read)
 {
 	int		len;
 	int		i;
 	char	*line;
 
+	current_read = 0;
+
 	if (!str)
 		return (0);
 	len = 0;
-	while (str[len] != '\n')
+	while (str[len] != '\n' && str[len])
 		len++;
-	line = malloc(sizeof(char) * (len + 2));
+	if (str[len] == '\n')
+		len++;
+	line = malloc(sizeof(char) * (len + 1));
 	i = 0;
-	while (str[i] != '\n')
+	while (i < len)
 	{
 		line[i] = str[i];
 		i++;
 	}
-	line[len] = '\n';
-	line[len + i] = '\0';
+	line[len] = '\0';
 	return (line);
 }
 
-char	*update_temp(char **temp)
+char	*update_temp(char **temp, char *line)
 {
 	int	len;
 	int cut;
@@ -131,10 +134,12 @@ char	*update_temp(char **temp)
 	if (!(*temp))
 		return (0);
 	len = ft_strlen(*temp);
-	cut = 0;
-	while ((*temp)[cut] != '\n')
-		cut++;
-	cut++;
+	cut = ft_strlen(line);
+	if (len == cut)
+	{
+		free(*temp);
+		return (NULL);
+	}
 	new_temp = malloc(sizeof(char) * (len + 1 - cut));
 	i = 0;
 	while ((*temp)[cut])

@@ -20,31 +20,64 @@ int main()
         return (1);
     }
 	line = get_next_line(fd[0]);
-    printf("%s", line);
+    printf("line 1: %s", line);
     free(line);
 
-// a-k.txt
-	/*
-    fd[1] = open("test_files/a-k.txt", O_RDONLY);
-    if (fd[1] == -1)
-    {
-        printf("Fail to open()\n");
-        return (1);
-    }
-	line = get_next_line(fd[1]);
-    printf("%s", line);
-    free(line);
+	line = get_next_line(fd[0]);
+    printf("there is no second line: %s", line);
+	if (!line)
+		printf("get_next_line return NULL\n");
+	else 
+		free(line);
 
     if (close(fd[0]) == -1)
     {
         printf("Fail to close()\n");
         return (1);
     }
+
+	printf("\nempty file\n");
+// --- empty.txt // 
+    fd[0] = open("test_files/empty_file.txt", O_RDONLY);
+    if (fd[0] == -1)
+    {
+        printf("Fail to open()\n");
+        return (1);
+    }
+	line = get_next_line(fd[0]);
+    printf("there is nothing to be read: %s\n", line);
+	if (!line)
+		printf("empty file --> get_next_line return NULL\n");
+	else 
+		free(line);
+    if (close(fd[0]) == -1)
+    {
+        printf("Fail to close()\n");
+        return (1);
+    }
+
+// a-k.txt
+    fd[1] = open("test_files/a-k.txt", O_RDONLY);
+    if (fd[1] == -1)
+    {
+        printf("Fail to open()\n");
+        return (1);
+    }
+	int i = 1;
+	while ((line = get_next_line(fd[1])))
+	{
+    	printf("line %d: %s", i, line);
+		if (!line)
+			printf("empty file --> get_next_line return NULL\n");
+		else 
+			free(line);
+		i++;
+	}
+
     if (close(fd[1]) == -1)
     {
         printf("Fail to close()\n");
         return (1);
     }
     return (0);
-	*/
 }

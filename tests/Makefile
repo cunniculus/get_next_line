@@ -22,24 +22,27 @@ TEST_FILES = $(addprefix $(TEST_FILES_DIR)/, \
 		a_nl.txt \
 		a-k.txt)
 
-all: $(NAME)
+all: $(NAME) exp
 	@./$(NAME)
 
 $(NAME): $(SRCS) $(SRC_TEST) $(TEST_FILES)
 	@$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) $(SRC_TEST) -o $(NAME) $(SRCS)
 
-m: mtest 
+m: mtest exp
 	@./mtest
 
 mtest: $(SRCS) minunit.c $(TEST_FILES)
 	@$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) minunit.c -o mtest $(SRCS)
 
-vgnl: $(NAME)
+vgnl: $(NAME) exp
 	valgrind ./$(NAME)
 
-vm: mtest
+vm: mtest exp
 	valgrind ./mtest
 	
+exp:
+	@export B
+
 fclean:
 	@rm -f $(NAME)
 
