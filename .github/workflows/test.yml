@@ -13,4 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: make
+        run: B=42
+        run: export B
         run: make
