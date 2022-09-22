@@ -23,4 +23,4 @@ jobs:
         python -m pip install norminette
     - name: Lint with norminette
       run: |
-        norminette get_next_line.c get_next_line.h
+        norminette get_next_line.c get_next_line_utils.c get_next_line.h

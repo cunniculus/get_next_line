@@ -22,7 +22,7 @@ char	*get_line(char *str);
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
-	static char *temp;
+	static char	*temp;
 	char		*line;
 	int			current_read;
 
@@ -34,7 +34,7 @@ char	*get_next_line(int fd)
 		buffer[current_read] = '\0';
 		printf("Current_read: %d\n", current_read);
 		printf("buffer = %s\n", buffer);
-		temp = ft_strjoin(&temp, buffer);	
+		temp = ft_strjoin(&temp, buffer);
 		printf("temp = %s\n", temp);
 	}
 	line = get_line(temp);
@@ -44,7 +44,6 @@ char	*get_next_line(int fd)
 
 int	nl_in_temp(char *temp)
 {
-	// in case temp is NULL
 	if (!temp)
 		return (FALSE);
 	while (*temp)
@@ -54,45 +53,6 @@ int	nl_in_temp(char *temp)
 		temp++;
 	}
 	return (FALSE);
-}
-
-char	*ft_strjoin(char **s1, char *s2)
-{
-	char	*str;
-	int		len;
-	int		i;
-	int		j;
-
-	len = ft_strlen(*s1) + ft_strlen(s2);;
-	str = malloc(sizeof(char) * (len + 1));
-	i = 0;
-	while (*s1 && (*s1)[i])
-	{
-		str[i] = (*s1)[i];
-		i++;
-	}
-	j = 0;
-	while (s2 && s2[j])
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[len] = '\0';
-	if (*s1)
-		free(*s1);
-	return (str);
-}
-
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-		i++;
-	return (i);
 }
 
 char	*get_line(char *str)
