@@ -81,12 +81,12 @@ char	*get_line(char *str)
 
 char	*update_temp(char **temp, char *line)
 {
-	int	len;
-	int cut;
-	int i;
-	char *new_temp;
+	int		len;
+	int		cut;
+	int		i;
+	char	*new_temp;
 
-    if (!(*temp))
+	if (!(*temp))
 		return (0);
 	len = ft_strlen(*temp);
 	cut = ft_strlen(line);
