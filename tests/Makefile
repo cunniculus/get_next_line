@@ -26,13 +26,13 @@ all: $(NAME) exp
 	@./$(NAME)
 
 $(NAME): $(SRCS) $(SRC_TEST) $(TEST_FILES)
-	@$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) $(SRC_TEST) -o $(NAME) $(SRCS)
+	$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) $(SRC_TEST) -o $(NAME) $(SRCS)
 
 m: mtest exp
 	@./mtest
 
 mtest: $(SRCS) minunit.c $(TEST_FILES)
-	@$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) minunit.c -o mtest $(SRCS)
+	$(CC) $(CFLAGS) -D$(BUFFER_SIZE) -I$(INCLUDES) minunit.c -o mtest $(SRCS)
 
 vgnl: $(NAME) exp
 	valgrind ./$(NAME)
@@ -45,5 +45,8 @@ exp:
 
 fclean:
 	@rm -f $(NAME)
+	@rm -f mtest
 
 re: fclean all
+
+rem: fclean m

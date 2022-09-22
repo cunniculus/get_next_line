@@ -6,51 +6,54 @@
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/22 00:06:10 by guolivei         ###   ########.fr       */
+/*   Updated: 2022/09/23 01:25:51 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-int		nl_in_temp(char *temp);
-char	*ft_strjoin(char **s1, char *s2);
-int		ft_strlen(char *str);
+int		nl_in_temp(char *temp, int total_read);
 char	*update_temp(char **temp, char *line);
 char	*get_line(char *str);
+int		error_found(int fd);
 
 char	*get_next_line(int fd)
 {
-	char		buffer[BUFFER_SIZE + 1];
+	char		*buffer;
 	static char	*temp;
 	char		*line;
 	int			current_read;
+	int			total_read;
 
-	while (!nl_in_temp(temp))
+	if (error_found(fd))
+		return (0);
+	total_read = 0;
+	current_read = 0;
+	buffer = malloc (sizeof(char) * (BUFFER_SIZE + 1));
+	while (!nl_in_temp(temp, total_read))
 	{
+		total_read = total_read + current_read;
 		current_read = read(fd, buffer, BUFFER_SIZE);
-		if (!current_read)
+		if (current_read <= 0)
 			break ;
 		buffer[current_read] = '\0';
-		printf("Current_read: %d\n", current_read);
-		printf("buffer = %s\n", buffer);
 		temp = ft_strjoin(&temp, buffer);
-		printf("temp = %s\n", temp);
 	}
 	line = get_line(temp);
 	temp = update_temp(&temp, line);
+	free(buffer);
 	return (line);
 }
 
-int	nl_in_temp(char *temp)
+int	nl_in_temp(char *temp, int total_read)
 {
 	if (!temp)
 		return (FALSE);
-	while (*temp)
+	while (temp[total_read])
 	{
-		if ('\n' == *temp)
+		if ('\n' == temp[total_read])
 			return (TRUE);
-		temp++;
+		total_read++;
 	}
 	return (FALSE);
 }
@@ -106,4 +109,13 @@ char	*update_temp(char **temp, char *line)
 	new_temp[i] = '\0';
 	free (*temp);
 	return (new_temp);
+}
+
+int	error_found(int fd)
+{
+	if (fd == 0 || fd == 2)
+		return (FALSE);
+	if (fd == -1 || BUFFER_SIZE <= 0)
+		return (TRUE);
+	return (FALSE);
 }

@@ -6,7 +6,7 @@
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/22 00:06:10 by guolivei         ###   ########.fr       */
+/*   Updated: 2022/09/22 23:47:43 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	ft_strlen(char *str)
 {
 	int	i;
 
-	i = 0;
 	if (!str)
 		return (0);
+	i = 0;
 	while (str[i])
 		i++;
 	return (i);

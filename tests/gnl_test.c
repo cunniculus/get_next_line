@@ -6,19 +6,29 @@
 #include <stdio.h>
 #include "get_next_line.h"
 
-
 int main()
 {
     int     fd[5];
     char    *line;
+	
+	int r = read(42, 0, 5);
+	printf("read(42, 0, 5): output = %d\n", r);
+	r = read(42, 0, 0);
+	printf("read(42, 0, 0): output = %d\n", r);
+	r = read(0, 0, 1);
+	printf("read(0, 0, 0): output = %d\n", r);
 
 // --- a_nl.txt // 
     fd[0] = open("test_files/a_nl.txt", O_RDONLY);
+	r = read(fd[0], 0, 0);
+	printf("read(%d, 0, 0): output = %d\n", fd[0], r);
     if (fd[0] == -1)
     {
         printf("Fail to open()\n");
         return (1);
     }
+	printf("já vai entrar na get_next_line.\n");
+	printf("the value of BUFFER_SIZE is: %d\n", BUFFER_SIZE);
 	line = get_next_line(fd[0]);
     printf("line 1: %s", line);
     free(line);
