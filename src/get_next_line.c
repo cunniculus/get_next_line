@@ -21,14 +21,11 @@ char	*get_line(char *str);
 
 char	*get_next_line(int fd)
 {
-	char		buffer[BUFFER_SIZE + 1]; // buffer to read into
-	static char *temp; // var to store chars read in between calls
+	char		buffer[BUFFER_SIZE + 1];
+	static char *temp;
 	char		*line;
-	int			current_read; // number of chars read from read() function
+	int			current_read;
 
-	// while temp has no '\n' char
-		// read BUFFER_SIZE bytes
-		// append it to temp
 	while (!nl_in_temp(temp))
 	{
 		current_read = read(fd, buffer, BUFFER_SIZE);
@@ -129,7 +126,7 @@ char	*update_temp(char **temp, char *line)
 	int i;
 	char *new_temp;
 
-	if (!(*temp))
+    if (!(*temp))
 		return (0);
 	len = ft_strlen(*temp);
 	cut = ft_strlen(line);
