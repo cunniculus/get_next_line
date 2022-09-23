@@ -1,26 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/23 02:05:55 by guolivei         ###   ########.fr       */
+/*   Updated: 2022/09/22 23:47:43 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "get_next_line.h"
 
-# include <stdlib.h>
-# include <unistd.h>
+int	ft_strlen(char *str)
+{
+	int	i;
 
-# define TRUE 42
-# define FALSE 0
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
-char	*get_next_line(int fd);
-char	*ft_strjoin(char **s1, char *s2);
-int		ft_strlen(char *str);
+char	*ft_strjoin(char **s1, char *s2)
+{
+	char	*str;
+	int		len;
+	int		i;
+	int		j;
 
-#endif
+	len = ft_strlen(*s1) + ft_strlen(s2);
+	str = malloc(sizeof(char) * (len + 1));
+	i = 0;
+	while (*s1 && (*s1)[i])
+	{
+		str[i] = (*s1)[i];
+		i++;
+	}
+	j = 0;
+	while (s2 && s2[j])
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[len] = '\0';
+	if (*s1)
+		free(*s1);
+	return (str);
+}
