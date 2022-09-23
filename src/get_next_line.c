@@ -6,15 +6,15 @@
 /*   By: guolivei <guolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:50:48 by guolivei          #+#    #+#             */
-/*   Updated: 2022/09/23 01:25:51 by guolivei         ###   ########.fr       */
+/*   Updated: 2022/09/23 02:25:43 by guolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 int		nl_in_temp(char *temp, int total_read);
-char	*update_temp(char **temp, char *line);
 char	*get_line(char *str);
+char	*update_temp(char **temp, char *line);
 int		error_found(int fd);
 
 char	*get_next_line(int fd)
@@ -113,8 +113,6 @@ char	*update_temp(char **temp, char *line)
 
 int	error_found(int fd)
 {
-	if (fd == 0 || fd == 2)
-		return (FALSE);
 	if (fd == -1 || BUFFER_SIZE <= 0)
 		return (TRUE);
 	return (FALSE);
