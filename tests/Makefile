@@ -2,7 +2,7 @@ NAME = gnl_test
 
 SRC_TEST = gnl_test.c
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -Wno-format-truncation
 
 INCLUDES = ../src
 

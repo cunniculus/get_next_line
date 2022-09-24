@@ -11,17 +11,24 @@ int main()
     int     fd[5];
     char    *line;
 	
+	/*
 	int r = read(42, 0, 5);
 	printf("read(42, 0, 5): output = %d\n", r);
 	r = read(42, 0, 0);
 	printf("read(42, 0, 0): output = %d\n", r);
 	r = read(0, 0, 1);
 	printf("read(0, 0, 0): output = %d\n", r);
-
+*/
+	int x = 4;
+	while (x > -20)
+	{
+		printf("fd = %d --> %s\n", x, get_next_line(x));
+		x--;
+	}
 // --- a_nl.txt // 
     fd[0] = open("test_files/a_nl.txt", O_RDONLY);
-	r = read(fd[0], 0, 0);
-	printf("read(%d, 0, 0): output = %d\n", fd[0], r);
+//	r = read(fd[0], 0, 0);
+//	printf("read(%d, 0, 0): output = %d\n", fd[0], r);
     if (fd[0] == -1)
     {
         printf("Fail to open()\n");
